@@ -2,10 +2,13 @@
 
 Express 5 + Prisma 6 + PostgreSQL 16 (Docker). JavaScript con ESM. Probado con Node 24 o superior.
 
+El frontend está en otro repositorio: [Proyecto-de-PrograWeb](https://github.com/cesarecheandianunz-arch/Proyecto-de-PrograWeb).
+
 ## Levantarlo por primera vez
 
 ```bash
-cd backend
+git clone https://github.com/cesarecheandianunz-arch/ProyectoPrograWeb-Backend.git
+cd ProyectoPrograWeb-Backend
 cp .env.example .env        # en PowerShell: Copy-Item .env.example .env
 npm install
 npm run db:up               # Postgres (puerto 5435) y Mailpit (http://localhost:8026)
@@ -15,7 +18,7 @@ npm run dev                 # API en http://localhost:3000/api
 npm test
 ```
 
-El frontend (`npm run dev` en la raíz) reenvía `/api` al puerto 3000 gracias al proxy de `vite.config.js`.
+Para usarlo con el frontend, deja esta API corriendo y en el repo del frontend ejecuta `npm run dev`. El `vite.config.js` del frontend reenvía `/api` al puerto 3000, así que no hace falta configurar CORS.
 
 Usuarios de prueba (contraseña = `SEED_PASSWORD` de tu `.env`):
 
@@ -31,16 +34,18 @@ Otros comandos: `npm run db:studio` (ver las tablas en el navegador), `npm run d
 ## Estructura: una carpeta por HU
 
 ```
-backend/
+ProyectoPrograWeb-Backend/
   prisma/
     schema.prisma          ← UNO solo, con una sección por HU
     seed.js                ← una función seedHUx() por HU
+    datos-iniciales.js     ← datos de ejemplo copiados del frontend
   src/
     app.js                 ← solo registra los routers (una línea por HU)
+    compartido/cuenta.js   ← validaciones copiadas del frontend
     lib/                   ← prisma, errores, correo (compartido)
     middlewares/auth.js    ← requireAuth, requireRol (compartido)
     hu1-cuentas/           ← HU-1 (implementada)
-    hu2-inventario/        ← HU-2 (rutas declaradas, responden 501)
+    hu2-inventario/        ← HU-2 (en desarrollo)
     hu3-solicitudes/       ← HU-3 (rutas declaradas, responden 501)
     hu4-prestamos/         ← HU-4 (rutas declaradas, responden 501)
     hu5-devoluciones/      ← HU-5 (rutas declaradas, responden 501)
@@ -56,7 +61,7 @@ Cada HU tiene `huX.routes.js` (qué URL, qué rol) y `huX.controller.js` (qué h
 - Errores de formulario: `400 { "errores": { "campo": "mensaje" } }`, la misma forma que usa el `setErrores` del front.
 - Otros errores: `{ "error": "mensaje" }` con 401 (sin sesión), 403 (rol o cuenta no permitida), 404 o 409 (duplicado).
 - La sesión va en una cookie httpOnly `sesion` (JWT). En el controlador, el usuario es `req.auth.id` y su rol `req.auth.rol`. Nunca recibas el id del estudiante en el body.
-- Validaciones compartidas con el front: importa desde `../../../src/utils/` en vez de copiarlas.
+- Validaciones: `src/compartido/` tiene copias de las reglas del frontend. Si una regla cambia en el frontend, actualízala también aquí.
 - En los controladores lanza `new HttpError(status, cuerpo)`; `manejarErrores` arma la respuesta.
 
 ## Trabajo en equipo

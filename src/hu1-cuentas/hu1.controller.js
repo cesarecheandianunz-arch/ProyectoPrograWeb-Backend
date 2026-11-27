@@ -5,8 +5,8 @@ import { prisma } from '../lib/prisma.js';
 import { HttpError, exigirSinErrores } from '../lib/errores.js';
 import { enviarCorreo } from '../lib/correo.js';
 import { COOKIE_SESION } from '../middlewares/auth.js';
-// Las MISMAS validaciones que usa el frontend (un solo archivo para ambos lados).
-import { validarRegistro, validarPerfil, passwordValida, correoInstitucional } from '../../../src/utils/cuenta.js';
+// Mismas reglas que src/utils/cuenta.js del repo del frontend. Si cambian allá, actualízalas aquí.
+import { validarRegistro, validarPerfil, passwordValida, correoInstitucional } from '../compartido/cuenta.js';
 
 const RONDAS_BCRYPT = 10;
 const MINUTOS_TOKEN = 30;

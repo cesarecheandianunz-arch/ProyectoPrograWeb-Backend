@@ -2,7 +2,7 @@
 // Cada HU agrega su parte en su función; no edites la de otra HU.
 import bcrypt from 'bcryptjs';
 import { PrismaClient } from '@prisma/client';
-import { carreras, categorias, cursos, equipos, unidades } from '../../src/datos.js';
+import { carreras, categorias, cursos, equipos, unidades } from './datos-iniciales.js';
 
 const prisma = new PrismaClient();
 const PASSWORD = process.env.SEED_PASSWORD || 'Prueba123';
